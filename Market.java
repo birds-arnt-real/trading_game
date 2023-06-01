@@ -1,0 +1,61 @@
+package trading_game;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Hashtable;
+import java.util.Random;
+
+
+public class Market {
+
+  protected Random rand_gen;
+  protected Hashtable<String,Asset> curr_market;
+
+  public Market(String file_path){
+
+    this.rand_gen = new Random();
+    List<String[]> asset_information = read_csv("financials.csv");
+    curr_market = new Hashtable<>();
+
+    for (int i = 1; i < asset_information.size(); i++){
+
+      String symbol = asset_information.get(i)[0];
+      String name = asset_information.get(i)[1];
+      String sector = asset_information.get(i)[2];
+      Double price = Double.parseDouble(asset_information.get(i)[3]);
+      int trend = rand_gen.nextInt(-1,2);
+      int volatility_factor = rand_gen.nextInt(0,20);
+
+      Asset curr_asset = new Asset(symbol,name,sector,price,trend,volatility_factor);
+      curr_market.put(symbol,curr_asset);
+
+    }
+
+
+  }
+
+  /**
+   * Reads in the initial CSV of asset information
+   * 0 = symbol, 1 = name, 2 = sector, 3 = price, 7 = 52 week high, 8 = 52 week low
+   * @param file_path name of CSV with asset information
+   * @return complete list of asset info, ignore first one as it has header info
+   */
+  public static List<String[]> read_csv(String file_path) {
+    List<String[]> data = new ArrayList<>();
+
+    try (BufferedReader br = new BufferedReader(new FileReader(file_path))) {
+      String line;
+      while ((line = br.readLine()) != null) {
+        // Split the line by comma
+        String[] values = line.split(",");
+        data.add(values);
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return data;
+  }
+}
