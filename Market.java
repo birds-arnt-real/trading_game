@@ -14,6 +14,11 @@ public class Market {
   protected Random rand_gen;
   protected Hashtable<String,Asset> curr_market;
 
+  /**
+   * Creates and assigns values to all assets in asset information file
+   *
+   * @param file_path where the asset information is coming from
+   */
   public Market(String file_path){
 
     this.rand_gen = new Random();
@@ -22,15 +27,20 @@ public class Market {
 
     for (int i = 1; i < asset_information.size(); i++){
 
-      String symbol = asset_information.get(i)[0];
-      String name = asset_information.get(i)[1];
-      String sector = asset_information.get(i)[2];
-      Double price = Double.parseDouble(asset_information.get(i)[3]);
-      int trend = rand_gen.nextInt(-1,2);
-      int volatility_factor = rand_gen.nextInt(0,20);
+      try {
+        String symbol = asset_information.get(i)[0];
+        String name = asset_information.get(i)[1];
+        String sector = asset_information.get(i)[2];
+        Double price = Double.parseDouble(asset_information.get(i)[3]);
+        int trend = rand_gen.nextInt(0, 3) - 1;
+        int volatility_factor = rand_gen.nextInt(0, 20);
 
-      Asset curr_asset = new Asset(symbol,name,sector,price,trend,volatility_factor);
-      curr_market.put(symbol,curr_asset);
+        Asset curr_asset = new Asset(symbol, name, sector, price, trend, volatility_factor);
+        curr_market.put(symbol, curr_asset);
+      } catch (Exception e){
+          System.out.println(asset_information.get(i)[0]+" failed loading");
+          e.printStackTrace();
+      }
 
     }
 

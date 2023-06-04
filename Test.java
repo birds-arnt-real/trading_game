@@ -7,6 +7,6 @@ public class Test {
   public static void main(String[] args) {
 
     Market testMarket = new Market("financials.csv");
-    System.out.println("hmmm");
+    System.out.println("Done");
   }
 }

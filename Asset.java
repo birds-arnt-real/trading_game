@@ -1,5 +1,7 @@
 package trading_game;
 
+import java.util.ArrayList;
+
 /**
  * Models an individual asset
  */
@@ -9,6 +11,7 @@ public class Asset {
   protected String sector;
   protected String name;
   protected double price;
+  protected ArrayList<Double> price_history;
   protected int trend_direction;
   protected int volatility_factor;
 
@@ -22,6 +25,7 @@ public class Asset {
     this.price = _price;
     this.trend_direction = _trend_direction;
     this.volatility_factor = _volatility_factor;
+    this.price_history.add(_price);
   }
 
 }
