@@ -42,7 +42,7 @@ public class Market {
         int volatility_factor = rand_gen.nextInt(0, 20);
 
         // this handles the market by ticker
-        Asset curr_asset = new Asset(symbol, name, sector, price, trend, volatility_factor);
+        Asset curr_asset = new Asset(symbol, sector, name, price, trend, volatility_factor);
         curr_market.put(symbol, curr_asset);
 
         // this handles it by sectors

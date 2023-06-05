@@ -1,6 +1,8 @@
 package trading_game;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Models an individual asset
@@ -37,6 +39,7 @@ public class Asset {
 //        + '\'' + ", price=" + price + ", price_history=" + price_history + ", trend_direction="
 //        + trend_direction + ", volatility_factor=" + volatility_factor + "}\n";
 
-    return ticker + "("+name+"): " + String.valueOf(price) + "\n";
+    return ticker + " ("+name+"): $" + String.valueOf(price) + "  (" +
+        Collections.min(price_history) + ", " + Collections.max(price_history)+")";
   }
 }
