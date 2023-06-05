@@ -5,8 +5,9 @@ import java.util.List;
 public class Test {
 
   public static void main(String[] args) {
-
-    Market testMarket = new Market("financials.csv");
-    System.out.println("Done");
+    Exchange curr = new Exchange(100000);
+    System.out.println("wut");
+    curr.runCommandLoop();
+    System.out.println("done");
   }
 }

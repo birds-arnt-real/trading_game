@@ -11,7 +11,7 @@ public class Asset {
   protected String sector;
   protected String name;
   protected double price;
-  protected ArrayList<Double> price_history;
+  protected ArrayList<Double> price_history = new ArrayList<Double>();
   protected int trend_direction;
   protected int volatility_factor;
 
@@ -28,4 +28,15 @@ public class Asset {
     this.price_history.add(_price);
   }
 
+  /**
+   * This is only for testing, ill write a better one for actual game play
+   * @return
+   */
+  @Override public String toString() {
+//    return "Asset{" + "ticker='" + ticker + '\'' + ", sector='" + sector + '\'' + ", name='" + name
+//        + '\'' + ", price=" + price + ", price_history=" + price_history + ", trend_direction="
+//        + trend_direction + ", volatility_factor=" + volatility_factor + "}\n";
+
+    return ticker + "("+name+"): " + String.valueOf(price) + "\n";
+  }
 }
