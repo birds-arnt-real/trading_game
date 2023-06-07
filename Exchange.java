@@ -69,7 +69,8 @@ public class Exchange {
     switch(display_choice){
       case "S":
         List<String> by_sector = get_assets_by_sector();
-        System.out.println(" Ticker       Name        Price  (low,high)");
+        System.out.println("Ticker      Name                              Price     (low,high)");
+        System.out.println("=====================================================================");
         for (int i = 0; i < by_sector.size(); i++) {
           System.out.println(by_sector.get(i));
         }
