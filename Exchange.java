@@ -68,7 +68,7 @@ public class Exchange {
 
     switch(display_choice){
       case "S":
-        ArrayList<Asset> by_sector = get_assets_by_sector();
+        List<String> by_sector = get_assets_by_sector();
         System.out.println(" Ticker       Name        Price  (low,high)");
         for (int i = 0; i < by_sector.size(); i++) {
           System.out.println(by_sector.get(i));
@@ -94,9 +94,9 @@ public class Exchange {
     return portfolio;
   }
 
-  public ArrayList<Asset> get_assets_by_sector() {
+  public List<String> get_assets_by_sector() {
 
-    List<Asset> by_sector = new ArrayList<>();
+    List<String> by_sector = new ArrayList<>();
     List<String> sector_title = current_market.sectors.stream().toList();
     String display_sector = "";
     String sector_choice = "";
@@ -106,14 +106,17 @@ public class Exchange {
         display_sector += line;
     }
 
+
+
     System.out.println("Which sector would you like displayed?");
     System.out.println(display_sector);
     sector_choice = keyboard.nextLine();
 
     String sector = sector_title.get(Integer.parseInt(sector_choice));
-    by_sector = current_market.curr_market_by_sector.get(sector);
+    by_sector = current_market.formatListWithPadding(current_market.curr_market_by_sector.get(sector));
+    //by_sector = current_market.curr_market_by_sector.get(sector);
 
-    return (ArrayList<Asset>) by_sector;
+    return by_sector;
 
 
   }

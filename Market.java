@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Hashtable;
@@ -92,5 +94,33 @@ public class Market {
       e.printStackTrace();
     }
     return data;
+  }
+
+  public List<String> formatListWithPadding(List<Asset> assets) {
+    // Split each string into sections
+    List<List<String>> stringSections = new ArrayList<>();
+    List<String> output = new ArrayList<>();
+
+    // Find the maximum length for each section
+    int[] max_lengths = new int[4];
+    for(Asset asset : assets){
+      String[] curr_asset = asset.toArray();
+      max_lengths[0] = Math.max(max_lengths[0],curr_asset[0].length());
+      max_lengths[1] = Math.max(max_lengths[1],curr_asset[1].length());
+      max_lengths[2] = Math.max(max_lengths[2],curr_asset[2].length());
+      max_lengths[3] = Math.max(max_lengths[3],curr_asset[3].length());
+    }
+
+    for(Asset asset: assets){
+      String[] curr_asset = asset.toArray();
+
+      String formatted_output = String.format("%-" + max_lengths[0] + "s" +
+          "%-" + max_lengths[1] + "s" + "%-" + max_lengths[2] + "s" + "%-" + max_lengths[3] + "s",
+          curr_asset[0],curr_asset[1],curr_asset[2],curr_asset[3]);
+      output.add(formatted_output);
+
+    }
+
+    return output;
   }
 }

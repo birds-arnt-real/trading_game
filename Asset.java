@@ -1,5 +1,6 @@
 package trading_game;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -41,5 +42,14 @@ public class Asset {
 
     return ticker + " ("+name+"): $" + String.valueOf(price) + "  (" +
         Collections.min(price_history) + ", " + Collections.max(price_history)+")";
+  }
+
+  public String[] toArray(){
+    String[] output = new String[4];
+    output[0] = ticker;
+    output[1] = name;
+    output[2] = String.valueOf(price);
+    output[3] = "(" + Collections.min(price_history) + ", " + Collections.max(price_history)+")";
+    return output;
   }
 }
