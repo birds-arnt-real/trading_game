@@ -114,13 +114,30 @@ public class Market {
     for(Asset asset: assets){
       String[] curr_asset = asset.toArray();
 
+//      String formatted_output = String.format("%-" + max_lengths[0] + "s" +
+//          "         %-" + max_lengths[1] + "s" + "  %-" + max_lengths[2] + "s" + "    %-" + max_lengths[3] + "s",
+//          curr_asset[0],curr_asset[1],curr_asset[2],curr_asset[3]);
+//      output.add(formatted_output);
+
       String formatted_output = String.format("%-" + max_lengths[0] + "s" +
-          "         %-" + max_lengths[1] + "s" + "  %-" + max_lengths[2] + "s" + "    %-" + max_lengths[3] +
-              "s",
-          curr_asset[0],curr_asset[1],curr_asset[2],curr_asset[3]);
+                                              "%-" + max_lengths[1] + "s" +
+                                              "%-" + max_lengths[2] + "s" +
+                                              "%-" + max_lengths[3] + "s",
+                                              curr_asset[0],
+                                              curr_asset[1],
+                                              curr_asset[2],
+                                              curr_asset[3]);
       output.add(formatted_output);
 
     }
+
+    // add header and display line
+
+    String col_labels = String.format("%-" + max_lengths[0] + "s" +
+        "      %-" + (max_lengths[1]) + "s" + "  %-" + max_lengths[2] + "s" + "     %-" +
+        max_lengths[3] + "s","Ticker", "Name","Price","(low,high)");
+
+    output.add(0,col_labels);
 
     return output;
   }
