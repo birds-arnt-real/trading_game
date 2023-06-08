@@ -4,9 +4,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Exchange {
-
-  private ArrayList<Asset> portfolio;
-  private double account_amount;
+  private Portfolio current_portfolio;
   protected Scanner keyboard;
   protected Market current_market;
 
@@ -15,8 +13,7 @@ public class Exchange {
    * @param _account_amount the amount of money the user will start with
    */
   public Exchange(double _account_amount){
-    this.account_amount = _account_amount;
-    this.portfolio = new ArrayList<>();
+    this.current_portfolio = new Portfolio(_account_amount);
     this.keyboard = new Scanner(System.in);
     this.current_market = new Market("financials.csv");
   }
@@ -48,7 +45,7 @@ public class Exchange {
   public void display_main_menu(){
     String output = "Enter one of the following options:\n"
         + "[E] Exchange\n"
-        + "[P] Portfolio\n"
+        + "[P] trading_game.Portfolio\n"
         + "[S] Settings\n"
         + "[F] Fast Forward\n"
         + "[C] Create Event\n"
@@ -69,8 +66,7 @@ public class Exchange {
     switch(display_choice){
       case "S":
         List<String> by_sector = get_assets_by_sector();
-        System.out.println("Ticker      Name                              Price     (low,high)");
-        System.out.println("=====================================================================");
+
         for (int i = 0; i < by_sector.size(); i++) {
           System.out.println(by_sector.get(i));
         }
@@ -82,17 +78,11 @@ public class Exchange {
 
   }
 
-
-
   public void display_settings(){
   }
 
   public boolean asset_transaction(){
     return false;
-  }
-
-  public ArrayList<Asset> getPortfolio() {
-    return portfolio;
   }
 
   public List<String> get_assets_by_sector() {
