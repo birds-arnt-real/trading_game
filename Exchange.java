@@ -30,8 +30,7 @@ public class Exchange {
 
         case "E":
           display_exchange();
-
-
+          asset_transaction();
 
       }
 
@@ -71,6 +70,9 @@ public class Exchange {
           System.out.println(by_sector.get(i));
         }
 
+        //todo delete this
+        boolean skip = true;
+
       case "P":
       case "N":
 
@@ -81,8 +83,26 @@ public class Exchange {
   public void display_settings(){
   }
 
-  public boolean asset_transaction(){
-    return false;
+  public void asset_transaction(){
+    System.out.println("[B]uy ?");
+    String asset_transaction_choice = this.keyboard.nextLine().toUpperCase();
+
+    if(asset_transaction_choice.equalsIgnoreCase("b")){
+      System.out.println("Which asset would you like to buy: ");
+
+      String ticker_to_buy = this.keyboard.nextLine().toUpperCase();
+      Asset to_buy = this.current_market.curr_market.get(ticker_to_buy);
+
+      System.out.println("Amount: ");
+      Integer amount_to_buy = Integer.parseInt(keyboard.nextLine());
+      this.current_portfolio.buy(to_buy,amount_to_buy);
+      System.out.println(this.current_portfolio.toString());
+    }
+
+
+
+
+
   }
 
   public List<String> get_assets_by_sector() {
@@ -97,19 +117,14 @@ public class Exchange {
         display_sector += line;
     }
 
-
-
     System.out.println("Which sector would you like displayed?");
     System.out.println(display_sector);
     sector_choice = keyboard.nextLine();
 
     String sector = sector_title.get(Integer.parseInt(sector_choice));
     by_sector = current_market.formatListWithPadding(current_market.curr_market_by_sector.get(sector));
-    //by_sector = current_market.curr_market_by_sector.get(sector);
 
     return by_sector;
-
-
   }
 
 
