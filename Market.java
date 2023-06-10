@@ -68,10 +68,7 @@ public class Market {
           System.out.println(asset_information.get(i)[0]+" failed loading");
           e.printStackTrace();
       }
-
     }
-
-
   }
 
   /**
@@ -91,11 +88,17 @@ public class Market {
         data.add(values);
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      return null;
     }
     return data;
   }
 
+  /**
+   * Takes in a list of assets and formats output with left justification and a line break
+   *   made out of equal signs
+   * @param assets assets to be formated and displayed
+   * @return List of asset strings with appropriate and relative spacing
+   */
   public List<String> formatListWithPadding(List<Asset> assets) {
     // Split each string into sections
     List<List<String>> stringSections = new ArrayList<>();
@@ -105,7 +108,7 @@ public class Market {
     int[] max_lengths = new int[4];
     for(Asset asset : assets){
       String[] curr_asset = asset.toArray();
-      max_lengths[0] = Math.max(max_lengths[0],curr_asset[0].length());
+      max_lengths[0] = Math.max(6,curr_asset[0].length());
       max_lengths[1] = Math.max(max_lengths[1],curr_asset[1].length());
       max_lengths[2] = Math.max(max_lengths[2],curr_asset[2].length());
       max_lengths[3] = Math.max(max_lengths[3],curr_asset[3].length());
@@ -114,12 +117,35 @@ public class Market {
     for(Asset asset: assets){
       String[] curr_asset = asset.toArray();
 
-      String formatted_output = String.format("%-" + max_lengths[0] + "s" +
-          "%-" + max_lengths[1] + "s" + "%-" + max_lengths[2] + "s" + "%-" + max_lengths[3] + "s",
-          curr_asset[0],curr_asset[1],curr_asset[2],curr_asset[3]);
+      String formatted_output = String.format("%-" + max_lengths[0] + "s" + "      "  +
+                                              "%-" + max_lengths[1] + "s" + "   "     +
+                                              "%-" + max_lengths[2] + "s" + "       " +
+                                              "%-" + max_lengths[3] + "s",
+                                              curr_asset[0],
+                                              curr_asset[1],
+                                              curr_asset[2],
+                                              curr_asset[3]);
       output.add(formatted_output);
 
     }
+
+    // add header and display line
+    String ticker_name_space = " ".repeat(6);
+    String name_price_space = " ".repeat(3);
+    String price_highlow_space = " ".repeat(7);
+    String line_break = "=".repeat(77);
+
+    String col_labels = String.format("%-" + max_lengths[0] + "s" + ticker_name_space  +
+                                      "%-" + max_lengths[1] + "s" + name_price_space     +
+                                      "%-" + max_lengths[2] + "s" + price_highlow_space +
+                                      "%-" + max_lengths[3] + "s",
+                                      "Ticker",
+                                      "Name",
+                                      "Price",
+                                      "(low, high)");
+
+    output.add(0,col_labels);
+    output.add(1,line_break);
 
     return output;
   }

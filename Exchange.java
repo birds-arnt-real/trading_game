@@ -4,9 +4,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Exchange {
-
-  private ArrayList<Asset> portfolio;
-  private double account_amount;
+  private Portfolio current_portfolio;
   protected Scanner keyboard;
   protected Market current_market;
 
@@ -15,8 +13,7 @@ public class Exchange {
    * @param _account_amount the amount of money the user will start with
    */
   public Exchange(double _account_amount){
-    this.account_amount = _account_amount;
-    this.portfolio = new ArrayList<>();
+    this.current_portfolio = new Portfolio(_account_amount);
     this.keyboard = new Scanner(System.in);
     this.current_market = new Market("financials.csv");
   }
@@ -33,8 +30,7 @@ public class Exchange {
 
         case "E":
           display_exchange();
-
-
+          asset_transaction();
 
       }
 
@@ -48,7 +44,7 @@ public class Exchange {
   public void display_main_menu(){
     String output = "Enter one of the following options:\n"
         + "[E] Exchange\n"
-        + "[P] Portfolio\n"
+        + "[P] trading_game.Portfolio\n"
         + "[S] Settings\n"
         + "[F] Fast Forward\n"
         + "[C] Create Event\n"
@@ -69,10 +65,13 @@ public class Exchange {
     switch(display_choice){
       case "S":
         List<String> by_sector = get_assets_by_sector();
-        System.out.println(" Ticker       Name        Price  (low,high)");
+
         for (int i = 0; i < by_sector.size(); i++) {
           System.out.println(by_sector.get(i));
         }
+
+        //todo delete this
+        boolean skip = true;
 
       case "P":
       case "N":
@@ -81,17 +80,29 @@ public class Exchange {
 
   }
 
-
-
   public void display_settings(){
   }
 
-  public boolean asset_transaction(){
-    return false;
-  }
+  public void asset_transaction(){
+    System.out.println("[B]uy ?");
+    String asset_transaction_choice = this.keyboard.nextLine().toUpperCase();
 
-  public ArrayList<Asset> getPortfolio() {
-    return portfolio;
+    if(asset_transaction_choice.equalsIgnoreCase("b")){
+      System.out.println("Which asset would you like to buy: ");
+
+      String ticker_to_buy = this.keyboard.nextLine().toUpperCase();
+      Asset to_buy = this.current_market.curr_market.get(ticker_to_buy);
+
+      System.out.println("Amount: ");
+      Integer amount_to_buy = Integer.parseInt(keyboard.nextLine());
+      this.current_portfolio.buy(to_buy,amount_to_buy);
+      System.out.println(this.current_portfolio.toString());
+    }
+
+
+
+
+
   }
 
   public List<String> get_assets_by_sector() {
@@ -106,19 +117,14 @@ public class Exchange {
         display_sector += line;
     }
 
-
-
     System.out.println("Which sector would you like displayed?");
     System.out.println(display_sector);
     sector_choice = keyboard.nextLine();
 
     String sector = sector_title.get(Integer.parseInt(sector_choice));
     by_sector = current_market.formatListWithPadding(current_market.curr_market_by_sector.get(sector));
-    //by_sector = current_market.curr_market_by_sector.get(sector);
 
     return by_sector;
-
-
   }
 
 

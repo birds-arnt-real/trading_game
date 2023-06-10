@@ -17,8 +17,18 @@ public class Asset {
   protected ArrayList<Double> price_history = new ArrayList<Double>();
   protected int trend_direction;
   protected int volatility_factor;
+  protected int amount;
+  protected double buy_price;
 
-
+  /**
+   * This is the constructor that gets added into the market
+   * @param _ticker
+   * @param _sector
+   * @param _name
+   * @param _price
+   * @param _trend_direction
+   * @param _volatility_factor
+   */
   public Asset(String _ticker, String _sector, String _name, double _price, int _trend_direction,
       int _volatility_factor){
 
@@ -29,6 +39,22 @@ public class Asset {
     this.trend_direction = _trend_direction;
     this.volatility_factor = _volatility_factor;
     this.price_history.add(_price);
+    this.amount = 0;
+  }
+
+  /**
+   * This is the asset that gets added into the portfolio
+   * @param _ticker
+   * @param _name
+   * @param _price
+   * @param amount
+   */
+  public Asset(String _ticker, String _name, double _price,int amount){
+    this.ticker = _ticker;
+    this.sector = null;
+    this.name = _name;
+    this.buy_price = _price;
+    this.amount = amount;
   }
 
   /**
