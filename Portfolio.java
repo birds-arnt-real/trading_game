@@ -5,10 +5,10 @@ import java.util.HashMap;
 
 public class Portfolio {
 
-  private double current_amount;
-  private double starting_amount;
-  private double overall_profit_loss;
-  private HashMap<String, Asset> assets = new HashMap<>();
+  protected double current_amount;
+  protected double starting_amount;
+  protected double overall_profit_loss;
+  protected HashMap<String, Asset> assets = new HashMap<>();
 
   public Portfolio(Double _starting_amount) {
     this.current_amount = _starting_amount;
