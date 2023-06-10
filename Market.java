@@ -88,7 +88,7 @@ public class Market {
         data.add(values);
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      return null;
     }
     return data;
   }
