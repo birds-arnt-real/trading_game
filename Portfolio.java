@@ -2,18 +2,21 @@ package trading_game;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Portfolio {
 
   protected double current_amount;
   protected double starting_amount;
   protected double overall_profit_loss;
+  protected double most_recent_profit_loss_change;
   protected HashMap<String, Asset> assets = new HashMap<>();
 
   public Portfolio(Double _starting_amount) {
     this.current_amount = _starting_amount;
     this.starting_amount = _starting_amount;
     this.overall_profit_loss = 0;
+    this.most_recent_profit_loss_change = 0;
   }
 
   /**
@@ -50,6 +53,16 @@ public class Portfolio {
     return false;
   }
 
+
+  @Override public String toString() {
+    String output ="\nCurrent Portfolio:";
+    for (Map.Entry<String, Asset> entry : this.assets.entrySet()) {
+      String key = entry.getKey();
+      Asset value = entry.getValue();
+      output += ("Key: " + key + ", Value: " + value);
+    }
+    return output;
+  }
 
 }
 

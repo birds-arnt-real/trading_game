@@ -16,7 +16,7 @@ public class Asset {
   protected double price;
   protected ArrayList<Double> price_history = new ArrayList<Double>();
   protected int trend_direction;
-  protected int volatility_factor;
+  protected double volatility_factor;
   protected int amount;
   protected double buy_price;
 
@@ -30,7 +30,7 @@ public class Asset {
    * @param _volatility_factor
    */
   public Asset(String _ticker, String _sector, String _name, double _price, int _trend_direction,
-      int _volatility_factor){
+      double _volatility_factor){
 
     this.ticker = _ticker;
     this.sector = _sector;
@@ -55,6 +55,7 @@ public class Asset {
     this.name = _name;
     this.buy_price = _price;
     this.amount = amount;
+    this.price_history.add(_price);
   }
 
   /**

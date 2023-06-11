@@ -16,11 +16,11 @@ public class JUnit_Tests {
 
   @BeforeEach
   public void init_test_object(){
-    this.test_market = new Market("financials.csv");
+    this.test_market = new Market("financials.csv",42);
     this.test_portfolio = new Portfolio(10000.0);
   }
 
-  //MARKET TESTS
+  //MARKET UNIT TESTS
 
   /**
    * Tests that if the CSV can not be loaded we throw a specific error
@@ -53,8 +53,7 @@ public class JUnit_Tests {
 
   }
 
-  //PORTFOLIO TESTS//
-
+  //PORTFOLIO UNIT TESTS//
   @Test
   public void test_portfolio_init(){
     Assert.assertEquals(10000.0, this.test_portfolio.starting_amount,.01);
@@ -65,7 +64,7 @@ public class JUnit_Tests {
    * Tests the portfolios resting state after a simple buy is correct
    */
   @Test
-  public void test_buy_success(){
+  public void test_buy_success_single(){
     Asset to_buy = this.test_market.curr_market.get("FB");
     boolean succesful = this.test_portfolio.buy(to_buy,10);
     Assert.assertTrue(succesful);
@@ -73,6 +72,37 @@ public class JUnit_Tests {
     Assert.assertEquals(this.test_portfolio.assets.get("FB").amount, 10);
     Assert.assertEquals(this.test_portfolio.assets.get("FB").buy_price, 171.58,.01);
     Assert.assertEquals(this.test_portfolio.current_amount,8284.2,.01);
+    Assert.assertEquals(this.test_portfolio.overall_profit_loss,0,.01);
+  }
+
+  @Test
+  public void test_buy_success_multiple_same(){
+    Asset to_buy = this.test_market.curr_market.get("FB");
+    boolean succesful = this.test_portfolio.buy(to_buy,3);
+    Assert.assertTrue(succesful);
+    Assert.assertEquals(1,this.test_portfolio.assets.size());
+    Assert.assertEquals(this.test_portfolio.assets.get("FB").amount, 3);
+    Assert.assertEquals(this.test_portfolio.assets.get("FB").buy_price, 171.58,.01);
+    Assert.assertEquals(9485.26,this.test_portfolio.current_amount,.01);
+    Assert.assertEquals(this.test_portfolio.overall_profit_loss,0,.01);
+  }
+
+  @Test
+  public void test_buy_success_multiple_different(){
+    Asset to_buy1 = this.test_market.curr_market.get("FB");
+    Asset to_buy2 = this.test_market.curr_market.get("AAPL");
+    Asset to_buy3 = this.test_market.curr_market.get("MSFT");
+    Asset to_buy4 = this.test_market.curr_market.get("AMZN");
+    boolean succesful1 = this.test_portfolio.buy(to_buy1,1);
+    boolean succesful2 = this.test_portfolio.buy(to_buy2,1);
+    boolean succesful3 = this.test_portfolio.buy(to_buy3,1);
+    boolean succesful4 = this.test_portfolio.buy(to_buy4,1);
+    Assert.assertTrue(succesful1);
+    Assert.assertTrue(succesful2);
+    Assert.assertTrue(succesful3);
+    Assert.assertTrue(succesful4);
+    Assert.assertEquals(4,this.test_portfolio.assets.size());
+    Assert.assertEquals(8237.76,this.test_portfolio.current_amount,.01);
     Assert.assertEquals(this.test_portfolio.overall_profit_loss,0,.01);
   }
 

@@ -1,6 +1,7 @@
 package trading_game;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Exchange {
@@ -12,10 +13,10 @@ public class Exchange {
    * Constructor for the Front end creates an empty portfolio and a base amount of cash for the user
    * @param _account_amount the amount of money the user will start with
    */
-  public Exchange(double _account_amount){
+  public Exchange(double _account_amount, int seed){
     this.current_portfolio = new Portfolio(_account_amount);
     this.keyboard = new Scanner(System.in);
-    this.current_market = new Market("financials.csv");
+    this.current_market = new Market("financials.csv", seed);
   }
 
   public void runCommandLoop(){
@@ -23,6 +24,7 @@ public class Exchange {
     String choice = null;
 
     do {
+      display_current_state();
       display_main_menu();
       choice = this.keyboard.nextLine().toUpperCase();
 
@@ -31,7 +33,11 @@ public class Exchange {
         case "E":
           display_exchange();
           asset_transaction();
-
+        case "A":
+          this.current_market.next_turn();
+          update_portfolio();
+        case "P":
+          System.out.println(this.current_portfolio);
       }
 
 
@@ -48,6 +54,7 @@ public class Exchange {
         + "[S] Settings\n"
         + "[F] Fast Forward\n"
         + "[C] Create Event\n"
+        + "[A] Advance\n"
         + "[Q] Quit\n";
 
     System.out.println(output);
@@ -80,6 +87,14 @@ public class Exchange {
 
   }
 
+  /**
+   * This will print out the current over
+   */
+  public void display_current_state(){
+    System.out.println("Most recent P/l: " + this.current_portfolio.most_recent_profit_loss_change);
+    System.out.println("Current Overall Profit/Loss: " + this.current_portfolio.overall_profit_loss);
+  }
+
   public void display_settings(){
   }
 
@@ -96,13 +111,7 @@ public class Exchange {
       System.out.println("Amount: ");
       Integer amount_to_buy = Integer.parseInt(keyboard.nextLine());
       this.current_portfolio.buy(to_buy,amount_to_buy);
-      System.out.println(this.current_portfolio.toString());
     }
-
-
-
-
-
   }
 
   public List<String> get_assets_by_sector() {
@@ -125,6 +134,26 @@ public class Exchange {
     by_sector = current_market.formatListWithPadding(current_market.curr_market_by_sector.get(sector));
 
     return by_sector;
+  }
+
+  public void update_portfolio() {
+
+    double curr_pl = this.current_portfolio.overall_profit_loss;
+    double current_turn_pl = 0.0;
+
+    this.current_portfolio.assets.forEach((key, value) -> {
+      current_portfolio.assets.get(key).price = this.current_market.curr_market.get(key).price;
+      current_portfolio.assets.get(key).price_history.add(this.current_market.curr_market.get(key).price);
+    });
+
+
+    for (Map.Entry<String, Asset> entry : this.current_portfolio.assets.entrySet()) {
+      String key = entry.getKey();
+      current_turn_pl += (this.current_portfolio.assets.get(key).amount
+          * this.current_market.curr_market.get(key).price);
+    }
+
+    current_turn_pl -= curr_pl;
   }
 
 

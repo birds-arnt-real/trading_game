@@ -19,15 +19,17 @@ public class Market {
   protected Hashtable<String,Asset> curr_market;
   protected Hashtable<String,List<Asset>> curr_market_by_sector;
   protected Set<String> sectors = new HashSet<String>();
+  protected int number_of_turns;
 
   /**
    * Creates and assigns values to all assets in asset information file
    *
    * @param file_path where the asset information is coming from
+   * @param seed for testing purposes
    */
-  public Market(String file_path){
+  public Market(String file_path, int seed){
 
-    this.rand_gen = new Random();
+    this.rand_gen = seed > 0 ? new Random(42) : new Random();
     List<String[]> asset_information = read_csv("financials.csv");
     curr_market = new Hashtable<>();
     curr_market_by_sector = new Hashtable<>();
@@ -41,7 +43,7 @@ public class Market {
         String sector = asset_information.get(i)[2];
         Double price = Double.parseDouble(asset_information.get(i)[3]);
         int trend = rand_gen.nextInt(0, 3) - 1;
-        int volatility_factor = rand_gen.nextInt(0, 20);
+        double volatility_factor = rand_gen.nextDouble(0, 20) / 100;
 
         // this handles the market by ticker
         Asset curr_asset = new Asset(symbol, sector, name, price, trend, volatility_factor);
@@ -63,6 +65,9 @@ public class Market {
 
         // Update the value in the Hashtable
         curr_market_by_sector.put(sector, asset_list);
+
+        // first turn so we start at 1
+        this.number_of_turns = 1;
 
       } catch (Exception e){
           System.out.println(asset_information.get(i)[0]+" failed loading");
@@ -148,5 +153,54 @@ public class Market {
     output.add(1,line_break);
 
     return output;
+  }
+
+  /**
+   * This advances to the next turn/day.  This will update all prices of assets
+   *   in the market.  This will not handle the actual logic of how much the price increases
+   * @return true if everything was updated, false if not.
+   */
+  public boolean next_turn() {
+
+    // first we need to update all of the assets
+    try {
+      this.curr_market.forEach((key, value) -> {
+        value.price_history.add(value.price);
+        value.price += price_change(this.curr_market.get(key));
+      });
+
+      this.number_of_turns++;
+
+      return true;
+    } catch(Exception e){
+      return false;
+    }
+  }
+
+  /**
+   * This will hold the logic for price updates.  There must be some sort of reason behind
+   *   how much and in what direction an asset's price will go.  In a perfect world they change
+   *   would follow these rules
+   *   1. the direction should have a larger chance of continuing its direction than switching
+   *   2. the max amount of price change is 20%
+   *   3. but maybe sometimes it can be more?
+   *   4.
+   * @param asset_to_update
+   * @return
+   */
+  public double price_change(Asset asset_to_update){
+
+    double curr_price = asset_to_update.price;
+    boolean wild_card = this.rand_gen.nextInt(100) % 11 == 0;
+    double amount_to_increase = asset_to_update.price * asset_to_update.volatility_factor;
+
+    if(wild_card) {
+      amount_to_increase += (curr_price * (this.rand_gen.nextInt(100)/100));
+    }
+
+    asset_to_update.trend_direction = rand_gen.nextInt(0, 3) - 1;
+    asset_to_update.volatility_factor = rand_gen.nextInt(0, 20) / 100;
+
+    return amount_to_increase;
   }
 }
