@@ -4,8 +4,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Hashtable;
@@ -16,8 +14,8 @@ import java.util.Set;
 public class Market {
 
   protected Random rand_gen;
-  protected Hashtable<String,Asset> curr_market;
-  protected Hashtable<String,List<Asset>> curr_market_by_sector;
+  protected Hashtable<String,Asset> assets_in_market;
+  protected Hashtable<String,List<Asset>> assets_in_market_by_sector;
   protected Set<String> sectors = new HashSet<String>();
   protected int number_of_turns;
 
@@ -31,8 +29,8 @@ public class Market {
 
     this.rand_gen = seed > 0 ? new Random(42) : new Random();
     List<String[]> asset_information = read_csv("financials.csv");
-    curr_market = new Hashtable<>();
-    curr_market_by_sector = new Hashtable<>();
+    assets_in_market = new Hashtable<>();
+    assets_in_market_by_sector = new Hashtable<>();
 
     // first we'll make the hashtable by ticker
     for (int i = 1; i < asset_information.size(); i++){
@@ -47,13 +45,13 @@ public class Market {
 
         // this handles the market by ticker
         Asset curr_asset = new Asset(symbol, sector, name, price, trend, volatility_factor);
-        curr_market.put(symbol, curr_asset);
+        assets_in_market.put(symbol, curr_asset);
 
         // this handles it by sectors
         sectors.add(sector);
 
         // Retrieve the list from the Hashtable
-        List<Asset> asset_list = curr_market_by_sector.get(sector);
+        List<Asset> asset_list = assets_in_market_by_sector.get(sector);
 
         // Check if the list exists or create a new one if it doesn't
         if (asset_list == null) {
@@ -64,7 +62,7 @@ public class Market {
         asset_list.add(curr_asset);
 
         // Update the value in the Hashtable
-        curr_market_by_sector.put(sector, asset_list);
+        assets_in_market_by_sector.put(sector, asset_list);
 
         // first turn so we start at 1
         this.number_of_turns = 1;
@@ -161,12 +159,14 @@ public class Market {
    * @return true if everything was updated, false if not.
    */
   public boolean next_turn() {
-
     // first we need to update all of the assets
     try {
-      this.curr_market.forEach((key, value) -> {
-        value.price_history.add(value.price);
-        value.price += price_change(this.curr_market.get(key));
+      this.assets_in_market.forEach((key, value) -> {
+        // the initial price is already added into the price history
+        if(value.price_history.size() != 1) {
+          value.price_history.add(value.price);
+        }
+        price_change(this.assets_in_market.get(key));
       });
 
       this.number_of_turns++;
@@ -188,19 +188,23 @@ public class Market {
    * @param asset_to_update
    * @return
    */
-  public double price_change(Asset asset_to_update){
+  public boolean price_change(Asset asset_to_update){
 
     double curr_price = asset_to_update.price;
     boolean wild_card = this.rand_gen.nextInt(100) % 11 == 0;
     double amount_to_increase = asset_to_update.price * asset_to_update.volatility_factor;
 
     if(wild_card) {
-      amount_to_increase += (curr_price * (this.rand_gen.nextInt(100)/100));
+      amount_to_increase += (curr_price * ((this.rand_gen.nextInt(100)/100)*
+          asset_to_update.volatility_factor));
     }
 
     asset_to_update.trend_direction = rand_gen.nextInt(0, 3) - 1;
     asset_to_update.volatility_factor = rand_gen.nextInt(0, 20) / 100;
+    double new_price =  asset_to_update.price += amount_to_increase;
+    asset_to_update.price = new_price;
+    //asset_to_update.price_history.add(new_price);
 
-    return amount_to_increase;
+    return true;
   }
 }

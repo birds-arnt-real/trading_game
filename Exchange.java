@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class Exchange {
-  private Portfolio current_portfolio;
+  protected Portfolio current_portfolio;
   protected Scanner keyboard;
   protected Market current_market;
 
@@ -106,7 +106,7 @@ public class Exchange {
       System.out.println("Which asset would you like to buy: ");
 
       String ticker_to_buy = this.keyboard.nextLine().toUpperCase();
-      Asset to_buy = this.current_market.curr_market.get(ticker_to_buy);
+      Asset to_buy = this.current_market.assets_in_market.get(ticker_to_buy);
 
       System.out.println("Amount: ");
       Integer amount_to_buy = Integer.parseInt(keyboard.nextLine());
@@ -131,7 +131,7 @@ public class Exchange {
     sector_choice = keyboard.nextLine();
 
     String sector = sector_title.get(Integer.parseInt(sector_choice));
-    by_sector = current_market.formatListWithPadding(current_market.curr_market_by_sector.get(sector));
+    by_sector = current_market.formatListWithPadding(current_market.assets_in_market_by_sector.get(sector));
 
     return by_sector;
   }
@@ -139,21 +139,14 @@ public class Exchange {
   public void update_portfolio() {
 
     double curr_pl = this.current_portfolio.overall_profit_loss;
-    double current_turn_pl = 0.0;
 
+    //updating the price and then adding the new one into the price history
     this.current_portfolio.assets.forEach((key, value) -> {
-      current_portfolio.assets.get(key).price = this.current_market.curr_market.get(key).price;
-      current_portfolio.assets.get(key).price_history.add(this.current_market.curr_market.get(key).price);
+      current_portfolio.assets.get(key).price = this.current_market.assets_in_market.get(key).price;
     });
 
-
-    for (Map.Entry<String, Asset> entry : this.current_portfolio.assets.entrySet()) {
-      String key = entry.getKey();
-      current_turn_pl += (this.current_portfolio.assets.get(key).amount
-          * this.current_market.curr_market.get(key).price);
-    }
-
-    current_turn_pl -= curr_pl;
+    this.current_portfolio.most_recent_profit_loss_change = this.current_portfolio.profit_loss();
+    this.current_portfolio.overall_profit_loss += this.current_portfolio.most_recent_profit_loss_change;
   }
 
 

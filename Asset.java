@@ -55,7 +55,6 @@ public class Asset {
     this.name = _name;
     this.buy_price = _price;
     this.amount = amount;
-    this.price_history.add(_price);
   }
 
   /**

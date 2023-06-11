@@ -8,16 +8,16 @@ import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.sound.sampled.Port;
-
 public class JUnit_Tests {
   private Market test_market;
   private Portfolio test_portfolio;
+  private Exchange test_exchange;
 
   @BeforeEach
   public void init_test_object(){
     this.test_market = new Market("financials.csv",42);
     this.test_portfolio = new Portfolio(10000.0);
+    this.test_exchange = new Exchange(10000,42);
   }
 
   //MARKET UNIT TESTS
@@ -27,7 +27,7 @@ public class JUnit_Tests {
    */
   @Test
   public void test_init_load_success() {
-    Assert.assertEquals(505, this.test_market.curr_market.size());
+    Assert.assertEquals(505, this.test_market.assets_in_market.size());
   }
 
   /**
@@ -46,7 +46,7 @@ public class JUnit_Tests {
 
     int amount_of_assets = 0;
     for(String assets_in_sector: this.test_market.sectors){
-      amount_of_assets += this.test_market.curr_market_by_sector.get(assets_in_sector).size();
+      amount_of_assets += this.test_market.assets_in_market_by_sector.get(assets_in_sector).size();
     }
 
     Assert.assertEquals(505,amount_of_assets);
@@ -65,7 +65,7 @@ public class JUnit_Tests {
    */
   @Test
   public void test_buy_success_single(){
-    Asset to_buy = this.test_market.curr_market.get("FB");
+    Asset to_buy = this.test_market.assets_in_market.get("FB");
     boolean succesful = this.test_portfolio.buy(to_buy,10);
     Assert.assertTrue(succesful);
     Assert.assertEquals(1,this.test_portfolio.assets.size());
@@ -77,7 +77,7 @@ public class JUnit_Tests {
 
   @Test
   public void test_buy_success_multiple_same(){
-    Asset to_buy = this.test_market.curr_market.get("FB");
+    Asset to_buy = this.test_market.assets_in_market.get("FB");
     boolean succesful = this.test_portfolio.buy(to_buy,3);
     Assert.assertTrue(succesful);
     Assert.assertEquals(1,this.test_portfolio.assets.size());
@@ -89,10 +89,10 @@ public class JUnit_Tests {
 
   @Test
   public void test_buy_success_multiple_different(){
-    Asset to_buy1 = this.test_market.curr_market.get("FB");
-    Asset to_buy2 = this.test_market.curr_market.get("AAPL");
-    Asset to_buy3 = this.test_market.curr_market.get("MSFT");
-    Asset to_buy4 = this.test_market.curr_market.get("AMZN");
+    Asset to_buy1 = this.test_market.assets_in_market.get("FB");
+    Asset to_buy2 = this.test_market.assets_in_market.get("AAPL");
+    Asset to_buy3 = this.test_market.assets_in_market.get("MSFT");
+    Asset to_buy4 = this.test_market.assets_in_market.get("AMZN");
     boolean succesful1 = this.test_portfolio.buy(to_buy1,1);
     boolean succesful2 = this.test_portfolio.buy(to_buy2,1);
     boolean succesful3 = this.test_portfolio.buy(to_buy3,1);
@@ -111,12 +111,74 @@ public class JUnit_Tests {
    */
   @Test
   public void test_buy_fail_too_expensive(){
-    Asset to_buy = this.test_market.curr_market.get("FB");
+    Asset to_buy = this.test_market.assets_in_market.get("FB");
     boolean failure = this.test_portfolio.buy(to_buy,1000);
     Assert.assertFalse(failure);
     Assert.assertEquals(0,this.test_portfolio.assets.size());
     Assert.assertEquals(this.test_portfolio.overall_profit_loss,0,.01);
   }
+
+
+
+  //EXCHANGE TESTS//
+
+
+  /**
+   * Tests that if the CSV can not be loaded we throw a specific error
+   */
+  @Test
+  public void test_init_exchange() {
+    Assert.assertEquals(505, this.test_exchange.current_market.assets_in_market.size());
+  }
+
+  /**
+   * Tests the portfolios resting state after a simple buy is correct
+   */
+  @Test
+  public void test_buy_advance(){
+    Asset to_buy = this.test_exchange.current_market.assets_in_market.get("AVB");
+    boolean succesful = this.test_exchange.current_portfolio.buy(to_buy,1);
+    Assert.assertTrue(succesful);
+
+    // FIRST ADVANCE
+    double curr_price = this.test_exchange.current_portfolio.assets.get("AVB").buy_price;
+    this.test_exchange.current_market.next_turn();
+    this.test_exchange.update_portfolio();
+
+    Assert.assertNotEquals(curr_price,
+        this.test_exchange.current_market.assets_in_market.get("AVB").price);
+    Assert.assertEquals(this.test_exchange.current_market.number_of_turns, 2);
+    double curr_pl = this.test_exchange.current_portfolio.overall_profit_loss;
+    Assert.assertNotEquals(this.test_exchange.current_portfolio.overall_profit_loss,0,.1);
+
+    // SECOND ADVANCE
+    this.test_exchange.current_market.next_turn();
+    this.test_exchange.update_portfolio();
+
+    // THIRD ADVANCE
+    Assert.assertEquals(this.test_exchange.current_market.number_of_turns, 3);
+    this.test_exchange.current_market.next_turn();
+    this.test_exchange.update_portfolio();
+
+    // FOURTH ADVANCE
+    this.test_exchange.current_market.next_turn();
+    this.test_exchange.update_portfolio();
+
+    // FIFTH ADVANCE
+    this.test_exchange.current_market.next_turn();
+    this.test_exchange.update_portfolio();
+    double next_pl = this.test_exchange.current_portfolio.overall_profit_loss;
+
+
+
+
+
+
+
+
+
+  }
+
 
 
 

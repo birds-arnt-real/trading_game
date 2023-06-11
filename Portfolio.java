@@ -53,6 +53,22 @@ public class Portfolio {
     return false;
   }
 
+  public double profit_loss(){
+    double pl = 0.0;
+    // trying to update the profit loss
+    for (Map.Entry<String, Asset> entry : this.assets.entrySet()) {
+      String key = entry.getKey();
+
+
+      int price_history_list_end = this.assets.get(key).price_history.size() - 2 > 0 ?
+          this.assets.get(key).price_history.size() - 2 : 0;
+
+      pl = (this.assets.get(key).amount * this.assets.get(key).price) -
+          (this.assets.get(key).amount  * this.assets.get(key).price_history.get(price_history_list_end));
+
+    }
+    return pl;
+  }
 
   @Override public String toString() {
     String output ="\nCurrent Portfolio:";
