@@ -43,21 +43,6 @@ public class Asset {
   }
 
   /**
-   * This is the asset that gets added into the portfolio
-   * @param _ticker
-   * @param _name
-   * @param _price
-   * @param amount
-   */
-  public Asset(String _ticker, String _name, double _price,int amount){
-    this.ticker = _ticker;
-    this.sector = null;
-    this.name = _name;
-    this.buy_price = _price;
-    this.amount = amount;
-  }
-
-  /**
    * This is only for testing, ill write a better one for actual game play
    * @return
    */

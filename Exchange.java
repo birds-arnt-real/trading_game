@@ -1,7 +1,6 @@
 package trading_game;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 public class Exchange {
@@ -21,8 +20,7 @@ public class Exchange {
 
   public void runCommandLoop(){
 
-    String choice = null;
-
+    String choice;
     do {
       display_current_state();
       display_main_menu();
@@ -48,14 +46,9 @@ public class Exchange {
    * Displays all Main Menu Options
    */
   public void display_main_menu(){
-    String output = "Enter one of the following options:\n"
-        + "[E] Exchange\n"
-        + "[P] trading_game.Portfolio\n"
-        + "[S] Settings\n"
-        + "[F] Fast Forward\n"
-        + "[C] Create Event\n"
-        + "[A] Advance\n"
-        + "[Q] Quit\n";
+    String output =
+        ("Enter one of the following options:\n[E] Exchange\n[P] trading_game.Portfolio\n[S] "
+            + "Settings\n[F] Fast Forward\n[C] Create Event\n[A] Advance\n[Q] Quit\n");
 
     System.out.println(output);
   }
@@ -64,7 +57,7 @@ public class Exchange {
   }
 
   public void display_exchange(){
-    String display_choice =  null;
+    String display_choice;
     System.out.println("######### EXCHANGE #########");
     System.out.println("Display Assets by: [S]ector, [P]rice, [N]ame");
     display_choice = keyboard.nextLine().toUpperCase();
@@ -73,13 +66,9 @@ public class Exchange {
       case "S":
         List<String> by_sector = get_assets_by_sector();
 
-        for (int i = 0; i < by_sector.size(); i++) {
-          System.out.println(by_sector.get(i));
+        for (String s : by_sector) {
+          System.out.println(s);
         }
-
-        //todo delete this
-        boolean skip = true;
-
       case "P":
       case "N":
 
@@ -109,21 +98,21 @@ public class Exchange {
       Asset to_buy = this.current_market.assets_in_market.get(ticker_to_buy);
 
       System.out.println("Amount: ");
-      Integer amount_to_buy = Integer.parseInt(keyboard.nextLine());
+      int amount_to_buy = Integer.parseInt(keyboard.nextLine());
       this.current_portfolio.buy(to_buy,amount_to_buy);
     }
   }
 
   public List<String> get_assets_by_sector() {
 
-    List<String> by_sector = new ArrayList<>();
+    List<String> by_sector;
     List<String> sector_title = current_market.sectors.stream().toList();
-    String display_sector = "";
-    String sector_choice = "";
+    StringBuilder display_sector = new StringBuilder();
+    String sector_choice;
 
     for(int i = 0; i < current_market.sectors.size(); i++){
-        String line = "[" + Integer.toString(i) + "] " + sector_title.get(i) +"\n";
-        display_sector += line;
+        String line = "[" + i + "] " + sector_title.get(i) +"\n";
+        display_sector.append(line);
     }
 
     System.out.println("Which sector would you like displayed?");
@@ -138,14 +127,14 @@ public class Exchange {
 
   public void update_portfolio() {
 
-    double curr_pl = this.current_portfolio.overall_profit_loss;
+    //double curr_pl = this.current_portfolio.overall_profit_loss;
 
     //updating the price and then adding the new one into the price history
-    this.current_portfolio.assets.forEach((key, value) -> {
-      current_portfolio.assets.get(key).price = this.current_market.assets_in_market.get(key).price;
-    });
+    this.current_portfolio.assets.forEach((key, value) ->
+        current_portfolio.assets.get(key).price =
+            this.current_market.assets_in_market.get(key).price);
 
-    this.current_portfolio.most_recent_profit_loss_change = this.current_portfolio.profit_loss();
+    this.current_portfolio.most_recent_profit_loss_change = this.current_portfolio.profit_loss_turn();
     this.current_portfolio.overall_profit_loss += this.current_portfolio.most_recent_profit_loss_change;
   }
 

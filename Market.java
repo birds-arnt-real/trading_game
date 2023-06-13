@@ -163,10 +163,11 @@ public class Market {
     try {
       this.assets_in_market.forEach((key, value) -> {
         // the initial price is already added into the price history
-        if(value.price_history.size() != 1) {
-          value.price_history.add(value.price);
-        }
+//        if(value.price_history.size() == 0) {
+//          value.price_history.add(value.price);
+//        }
         price_change(this.assets_in_market.get(key));
+
       });
 
       this.number_of_turns++;
@@ -194,16 +195,17 @@ public class Market {
     boolean wild_card = this.rand_gen.nextInt(100) % 11 == 0;
     double amount_to_increase = asset_to_update.price * asset_to_update.volatility_factor;
 
-    if(wild_card) {
-      amount_to_increase += (curr_price * ((this.rand_gen.nextInt(100)/100)*
+    if(wild_card){
+      amount_to_increase += (curr_price * ((this.rand_gen.nextDouble(1))*
           asset_to_update.volatility_factor));
     }
 
     asset_to_update.trend_direction = rand_gen.nextInt(0, 3) - 1;
-    asset_to_update.volatility_factor = rand_gen.nextInt(0, 20) / 100;
-    double new_price =  asset_to_update.price += amount_to_increase;
+    asset_to_update.volatility_factor = rand_gen.nextDouble(0, .2);
+    double new_price =
+        asset_to_update.price += (amount_to_increase * asset_to_update.trend_direction);
     asset_to_update.price = new_price;
-    //asset_to_update.price_history.add(new_price);
+    asset_to_update.price_history.add(new_price);
 
     return true;
   }

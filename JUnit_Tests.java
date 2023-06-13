@@ -70,9 +70,9 @@ public class JUnit_Tests {
     Assert.assertTrue(succesful);
     Assert.assertEquals(1,this.test_portfolio.assets.size());
     Assert.assertEquals(this.test_portfolio.assets.get("FB").amount, 10);
-    Assert.assertEquals(this.test_portfolio.assets.get("FB").buy_price, 171.58,.01);
-    Assert.assertEquals(this.test_portfolio.current_amount,8284.2,.01);
-    Assert.assertEquals(this.test_portfolio.overall_profit_loss,0,.01);
+    Assert.assertEquals(171.58,this.test_portfolio.assets.get("FB").buy_price,.01);
+    Assert.assertEquals(8284.2,this.test_portfolio.current_amount,.01);
+    Assert.assertEquals(0,this.test_portfolio.overall_profit_loss,.01);
   }
 
   @Test
@@ -157,26 +157,6 @@ public class JUnit_Tests {
 
     // THIRD ADVANCE
     Assert.assertEquals(this.test_exchange.current_market.number_of_turns, 3);
-    this.test_exchange.current_market.next_turn();
-    this.test_exchange.update_portfolio();
-
-    // FOURTH ADVANCE
-    this.test_exchange.current_market.next_turn();
-    this.test_exchange.update_portfolio();
-
-    // FIFTH ADVANCE
-    this.test_exchange.current_market.next_turn();
-    this.test_exchange.update_portfolio();
-    double next_pl = this.test_exchange.current_portfolio.overall_profit_loss;
-
-
-
-
-
-
-
-
-
   }
 
 
