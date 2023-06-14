@@ -46,11 +46,13 @@ public class Portfolio {
    */
   public boolean sell(String to_sell, int amount) {
 
-    if (this.assets.containsKey(to_sell) && (this.assets.get(to_sell).amount <= amount)) {
-        double curr_value = this.assets.get(to_sell).amount * this.assets.get(to_sell).buy_price;
-        double buy_value = this.assets.get(to_sell).amount * this.assets.get(to_sell).price;
+    if (this.assets.containsKey(to_sell) && (this.assets.get(to_sell).amount >= amount)) {
+        double curr_value = amount * this.assets.get(to_sell).buy_price;
+        double buy_value = amount * this.assets.get(to_sell).price;
         this.current_amount += curr_value;
         this.overall_profit_loss += (curr_value - buy_value);
+        this.assets.get(to_sell).amount -= amount;
+
         return true;
     }
     return false;
@@ -79,7 +81,13 @@ public class Portfolio {
     for (Map.Entry<String, Asset> entry : this.assets.entrySet()) {
       String key = entry.getKey();
       Asset value = entry.getValue();
-      output += ("Key: " + key + ", Value: " + value);
+      double total_pl = (value.price-value.buy_price)*value.amount;
+
+      output += (key + " " +
+                value.amount + " " +
+                value.buy_price + " " +
+                value.price + " " +
+                total_pl);
     }
     return output;
   }

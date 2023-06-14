@@ -1,5 +1,4 @@
 package trading_game;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -28,14 +27,23 @@ public class Exchange {
 
       switch(choice){
 
-        case "E":
-          display_exchange();
+        case "B":
+          display_exchange_buy();
           asset_transaction();
+          break;
         case "A":
           this.current_market.next_turn();
           update_portfolio();
+          break;
+        case "S":
+          display_exchange_sell();
+          break;
         case "P":
           System.out.println(this.current_portfolio);
+          break;
+        default:
+          System.out.println("default");
+          break;
       }
 
 
@@ -47,8 +55,9 @@ public class Exchange {
    */
   public void display_main_menu(){
     String output =
-        ("Enter one of the following options:\n[E] Exchange\n[P] trading_game.Portfolio\n[S] "
-            + "Settings\n[F] Fast Forward\n[C] Create Event\n[A] Advance\n[Q] Quit\n");
+        ("Enter one of the following options:\n[B] Buy\n[S] Sell\n[P] trading_game"
+            + ".Portfolio\n[S] Settings\n[F] Fast Forward\n[C] Create Event\n[A] Advance\n[Q] "
+            + "Quit\n");
 
     System.out.println(output);
   }
@@ -56,9 +65,9 @@ public class Exchange {
   public void display_portfolio(){
   }
 
-  public void display_exchange(){
+  public void display_exchange_buy(){
     String display_choice;
-    System.out.println("######### EXCHANGE #########");
+    System.out.println("######### BUY #########");
     System.out.println("Display Assets by: [S]ector, [P]rice, [N]ame");
     display_choice = keyboard.nextLine().toUpperCase();
 
@@ -69,12 +78,30 @@ public class Exchange {
         for (String s : by_sector) {
           System.out.println(s);
         }
+        break;
       case "P":
+        System.out.println(this.current_portfolio);
+        break;
       case "N":
 
     }
 
   }
+
+  public void display_exchange_sell(){
+
+    System.out.println("######### Sell #########");
+    this.current_portfolio.toString();
+    System.out.println("Ticker to sell: ");
+
+    String ticker_to_sell = keyboard.nextLine().toUpperCase();
+    System.out.println("Amount: ");
+    int amount_to_sell = keyboard.nextInt();
+
+    this.current_portfolio.sell(ticker_to_sell,amount_to_sell);
+
+    }
+
 
   /**
    * This will print out the current over
