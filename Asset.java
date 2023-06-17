@@ -1,6 +1,7 @@
 package trading_game;
 
 import java.lang.reflect.Array;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -19,6 +20,7 @@ public class Asset {
   protected double volatility_factor;
   protected int amount;
   protected double buy_price;
+  protected double profit_loss;
 
   /**
    * This is the constructor that gets added into the market
@@ -40,6 +42,7 @@ public class Asset {
     this.volatility_factor = _volatility_factor;
     this.price_history.add(_price);
     this.amount = 0;
+    this.profit_loss = 0;
   }
 
   /**
@@ -56,11 +59,19 @@ public class Asset {
   }
 
   public String[] toArray(){
-    String[] output = new String[4];
+
+    DecimalFormat decimalFormat = new DecimalFormat("#.00");
+
+    String[] output = new String[6];
     output[0] = ticker;
     output[1] = name;
-    output[2] = String.valueOf(price);
-    output[3] = "(" + Collections.min(price_history) + ", " + Collections.max(price_history)+")";
+    output[2] = String.valueOf(decimalFormat.format(price));
+    output[3] =
+        "(" + decimalFormat.format(Collections.min(price_history)) +
+            ", " + decimalFormat.format(Collections.max(price_history))+")";
+    output[4] = String.valueOf(buy_price);
+    output[5] = String.valueOf(profit_loss);
+
     return output;
   }
 }

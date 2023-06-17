@@ -27,8 +27,8 @@ public class Exchange {
 
       switch(choice){
 
-        case "B":
-          display_exchange_buy();
+        case "E":
+          display_exchange();
           asset_transaction();
           break;
         case "A":
@@ -55,7 +55,7 @@ public class Exchange {
    */
   public void display_main_menu(){
     String output =
-        ("Enter one of the following options:\n[B] Buy\n[S] Sell\n[P] trading_game"
+        ("Enter one of the following options:\n[E] Exchange\n[S] Sell\n[P] trading_game"
             + ".Portfolio\n[S] Settings\n[F] Fast Forward\n[C] Create Event\n[A] Advance\n[Q] "
             + "Quit\n");
 
@@ -65,13 +65,14 @@ public class Exchange {
   public void display_portfolio(){
   }
 
-  public void display_exchange_buy(){
+  public void display_exchange(){
     String display_choice;
-    System.out.println("######### BUY #########");
-    System.out.println("Display Assets by: [S]ector, [P]rice, [N]ame");
+    System.out.println("######### EXCHANGE #########");
+    System.out.println("View Assets by: [S]ector, [P]rice, [N]ame");
     display_choice = keyboard.nextLine().toUpperCase();
 
     switch(display_choice){
+      // this displays based on sector
       case "S":
         List<String> by_sector = get_assets_by_sector();
 
@@ -80,9 +81,12 @@ public class Exchange {
         }
         break;
       case "P":
-        System.out.println(this.current_portfolio);
+
         break;
       case "N":
+
+      default:
+
 
     }
 
@@ -91,13 +95,14 @@ public class Exchange {
   public void display_exchange_sell(){
 
     System.out.println("######### Sell #########");
-    this.current_portfolio.toString();
-    System.out.println("Ticker to sell: ");
+    System.out.println(this.current_portfolio.toString());
+    System.out.println("Enter Ticker to sell and amount (ex ATT 10) or [enter] to return");
 
-    String ticker_to_sell = keyboard.nextLine().toUpperCase();
-    System.out.println("Amount: ");
-    int amount_to_sell = keyboard.nextInt();
+    String[] asset_sell_transaction = keyboard.nextLine().toUpperCase().split(" ");
+    if(asset_sell_transaction.length <= 1) return;
 
+    String ticker_to_sell = asset_sell_transaction[0];
+    int amount_to_sell = Integer.parseInt(asset_sell_transaction[1]);
     this.current_portfolio.sell(ticker_to_sell,amount_to_sell);
 
     }
@@ -115,20 +120,18 @@ public class Exchange {
   }
 
   public void asset_transaction(){
-    System.out.println("[B]uy ?");
-    String asset_transaction_choice = this.keyboard.nextLine().toUpperCase();
+    System.out.println("To buy enter ticker and desired amount (ex. ATT 15) or [enter] to "
+        + "return\n");
+    String[] asset_transaction_choice = this.keyboard.nextLine().toUpperCase().split(" ");
+    if(asset_transaction_choice.length <= 1) return;
 
-    if(asset_transaction_choice.equalsIgnoreCase("b")){
-      System.out.println("Which asset would you like to buy: ");
+    String ticker_to_buy = asset_transaction_choice[0];
+    int amount_to_buy = Integer.parseInt(asset_transaction_choice[1]);
 
-      String ticker_to_buy = this.keyboard.nextLine().toUpperCase();
-      Asset to_buy = this.current_market.assets_in_market.get(ticker_to_buy);
-
-      System.out.println("Amount: ");
-      int amount_to_buy = Integer.parseInt(keyboard.nextLine());
-      this.current_portfolio.buy(to_buy,amount_to_buy);
+    Asset to_buy = this.current_market.assets_in_market.get(ticker_to_buy);
+    this.current_portfolio.buy(to_buy,amount_to_buy);
+    return;
     }
-  }
 
   public List<String> get_assets_by_sector() {
 
@@ -147,7 +150,7 @@ public class Exchange {
     sector_choice = keyboard.nextLine();
 
     String sector = sector_title.get(Integer.parseInt(sector_choice));
-    by_sector = current_market.formatListWithPadding(current_market.assets_in_market_by_sector.get(sector));
+    by_sector = current_market.formatMarketListWithPadding(current_market.assets_in_market_by_sector.get(sector));
 
     return by_sector;
   }
@@ -157,11 +160,15 @@ public class Exchange {
     //double curr_pl = this.current_portfolio.overall_profit_loss;
 
     //updating the price and then adding the new one into the price history
-    this.current_portfolio.assets.forEach((key, value) ->
+    this.current_portfolio.assets.forEach((key, value) -> {
         current_portfolio.assets.get(key).price =
-            this.current_market.assets_in_market.get(key).price);
+            this.current_market.assets_in_market.get(key).price;
 
-    this.current_portfolio.most_recent_profit_loss_change = this.current_portfolio.profit_loss_turn();
+        this.current_portfolio.profit_loss_individual_asset_per_turn(this.current_market.assets_in_market.get(key));
+    });
+
+
+    this.current_portfolio.most_recent_profit_loss_change = this.current_portfolio.profit_loss_overall_per_turn();
     this.current_portfolio.overall_profit_loss += this.current_portfolio.most_recent_profit_loss_change;
   }
 

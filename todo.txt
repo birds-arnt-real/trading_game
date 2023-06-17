@@ -1,11 +1,20 @@
 Action items
 
-1.  create a more optimal way to buy (buy -> sector -> buy -> ticker) is too much
-2.  display portfolio before asking what they want to sell
+1.  (DONE) create a more optimal way to buy (buy -> sector -> buy -> ticker) is too much
+2.  (DONE) display portfolio before asking what they want to sell
 3.  display the profit or loss from a sale from within the sell action (exchange)
 4.  Create visual way to display price movement.  Linear graph would be ideal but even maybe
         (----- ++++++) or just {||||||||        }
-5.
+5. Create a randomizer for movement by sector
+6. finish display by name
+7. finish display by price
+8. create way to only display N results at a time and then to move forward between the pages
+9. confirmation of a succesful buy
+10. Display portfolio before sell window, so user can see what they have to sell
+11. (DONE) stream line selling process
+12. clean up displaying portfolio with appropriate padding
+13.  (DONE) round all doubles down to precision 2
+14.  (LEFT OFF HERE ) Fix portfolio display to be cleaner
 
 Thoughts
 1.  500 stocks is too many unless I want to add a sector volatility_factor.

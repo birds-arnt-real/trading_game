@@ -102,7 +102,7 @@ public class Market {
    * @param assets assets to be formated and displayed
    * @return List of asset strings with appropriate and relative spacing
    */
-  public List<String> formatListWithPadding(List<Asset> assets) {
+  public List<String> formatMarketListWithPadding(List<Asset> assets) {
     // Split each string into sections
     List<List<String>> stringSections = new ArrayList<>();
     List<String> output = new ArrayList<>();
