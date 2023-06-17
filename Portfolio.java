@@ -74,8 +74,7 @@ public class Portfolio {
 
     // trying to update the profit loss
 
-      int price_history_list_end = asset.price_history.size() - 2 > 0 ?
-          asset.price_history.size() - 2 : 0;
+      int price_history_list_end = Math.max(asset.price_history.size() - 2, 0);
 
       double pl = (asset.amount * asset.price) -
           (asset.amount * asset.price_history.get(price_history_list_end));
@@ -121,7 +120,7 @@ public class Portfolio {
       max_lengths[0] = Math.max(6,curr_asset[0].length());
       max_lengths[1] = Math.max(max_lengths[1],curr_asset[1].length());
       max_lengths[2] = Math.max(6,curr_asset[2].length());
-      max_lengths[3] = Math.max(6,curr_asset[3].length());
+      max_lengths[3] = Math.max(max_lengths[3], curr_asset[3].length());
       max_lengths[4] = Math.max(6,curr_asset[4].length());
       max_lengths[5] = Math.max(11,curr_asset[5].length());
     }
@@ -150,7 +149,7 @@ public class Portfolio {
     String price_highlow_space = " ".repeat(7);
     String highlow_buy_space = " ".repeat(7);
     String buy_pl_space = " ".repeat(4);
-    String line_break = "=".repeat(92);
+    String line_break = "=".repeat(100);
 
     String col_labels = String.format("%-" + max_lengths[0] + "s" + ticker_name_space  +
             "%-" + max_lengths[1] + "s" + name_price_space     +
