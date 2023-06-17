@@ -55,7 +55,7 @@ public class Asset {
 
     DecimalFormat decimalFormat = new DecimalFormat("#.00");
 
-    String[] output = new String[6];
+    String[] output = new String[7];
     output[0] = ticker;
     output[1] = name;
     output[2] = String.valueOf(decimalFormat.format(price));
@@ -64,6 +64,7 @@ public class Asset {
             ", " + decimalFormat.format(Collections.max(price_history))+")";
     output[4] = String.valueOf(buy_price);
     output[5] = String.valueOf(profit_loss);
+    output[6] = String.valueOf(amount);
 
     return output;
   }

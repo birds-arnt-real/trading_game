@@ -52,6 +52,8 @@ public class Portfolio {
         this.current_amount += curr_value;
         this.overall_profit_loss += (curr_value - buy_value);
         this.assets.get(to_sell).amount -= amount;
+        System.out.println(amount + " shares of " + to_sell + "sold for a profit of "
+            + (buy_value-curr_value));
 
     }
   }
@@ -64,7 +66,7 @@ public class Portfolio {
 
       int price_history_list_end = Math.max(this.assets.get(key).price_history.size() - 2, 0);
 
-      pl = (this.assets.get(key).amount * this.assets.get(key).price) -
+      pl += (this.assets.get(key).amount * this.assets.get(key).price) -
           (this.assets.get(key).amount  * this.assets.get(key).price_history.get(price_history_list_end));
     }
     return pl;
@@ -82,25 +84,6 @@ public class Portfolio {
     asset.profit_loss += pl;
   }
 
-
-//  @Override public String toString() {
-//    String output ="\n#################### PORTFOLIO ####################\n"
-//        + "TICKER    AMOUNT    BUY    PRICE    TOTAL PROFIT/LOSS\n";
-//
-//    for (Map.Entry<String, Asset> entry : this.assets.entrySet()) {
-//      String key = entry.getKey();
-//      Asset value = entry.getValue();
-//      double total_pl = (value.price-value.buy_price)*value.amount;
-//
-//      output += (key + " " +
-//                value.amount + " " +
-//                value.buy_price + " " +
-//                value.price + " " +
-//                total_pl);
-//    }
-//    return output;
-//  }
-
   /**
    * Takes in a list of assets and formats output with left justification and a line break
    *   made out of equal signs
@@ -114,7 +97,7 @@ public class Portfolio {
 
     DecimalFormat decimalFormat = new DecimalFormat("#.00");
     // Find the maximum length for each section
-    int[] max_lengths = new int[6];
+    int[] max_lengths = new int[7];
     for(Asset asset : assets){
       String[] curr_asset = asset.toArray();
       max_lengths[0] = Math.max(6,curr_asset[0].length());
@@ -123,6 +106,7 @@ public class Portfolio {
       max_lengths[3] = Math.max(max_lengths[3], curr_asset[3].length());
       max_lengths[4] = Math.max(6,curr_asset[4].length());
       max_lengths[5] = Math.max(11,curr_asset[5].length());
+      max_lengths[6] = Math.max(6,curr_asset[6].length());
     }
 
     for(Asset asset: assets){
@@ -131,12 +115,14 @@ public class Portfolio {
       String formatted_output = String.format("%-" + max_lengths[0] + "s" + "      "  +
               "%-" + max_lengths[1] + "s" + "   "     +
               "%-" + max_lengths[2] + "s" + "       " +
+              "%-" + max_lengths[6] + "s" + "       " +
               "%-" + max_lengths[3] + "s" + "       " +
               "%-" + max_lengths[4] + "s" + "       " +
               "%-" + max_lengths[5] + "s" + "       " ,
           curr_asset[0],
           curr_asset[1],
           decimalFormat.format(Double.parseDouble(curr_asset[2])),
+          curr_asset[6],
           curr_asset[3],
           decimalFormat.format(Double.parseDouble(curr_asset[4])),
           decimalFormat.format(Double.parseDouble(curr_asset[5])));
@@ -154,12 +140,14 @@ public class Portfolio {
     String col_labels = String.format("%-" + max_lengths[0] + "s" + ticker_name_space  +
             "%-" + max_lengths[1] + "s" + name_price_space     +
             "%-" + max_lengths[2] + "s" + price_highlow_space +
+            "%-" + max_lengths[6] + "s" + price_highlow_space +
             "%-" + max_lengths[3] + "s" + highlow_buy_space +
             "%-" + max_lengths[4] + "s" + buy_pl_space +
             "%-" + max_lengths[5] + "s",
         "Ticker",
         "Name",
         "Price",
+        "Amount",
         "(low, high)",
         "Buy Price",
         "PL");
