@@ -1,4 +1,5 @@
 package trading_game;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Scanner;
 
@@ -105,8 +106,13 @@ public class Exchange {
    * This will print out the current over
    */
   public void display_current_state(){
-    System.out.println("Most recent P/l: " + this.current_portfolio.most_recent_profit_loss_change);
-    System.out.println("Current Overall Profit/Loss: " + this.current_portfolio.overall_profit_loss);
+    DecimalFormat decimalFormat = new DecimalFormat("#.00");
+    System.out.println("Most recent P/l: " +
+        decimalFormat.format(this.current_portfolio.most_recent_profit_loss_change));
+    System.out.println("Current Overall Profit/Loss: " +
+        decimalFormat.format(this.current_portfolio.overall_profit_loss));
+    System.out.println("You have $" + decimalFormat.format(this.current_portfolio.current_amount) +
+        " available on your " + this.current_market.number_of_turns + " day.\n");
   }
 
   public void display_settings(){

@@ -28,15 +28,25 @@ public class Portfolio {
   public boolean buy(Asset to_add, int amount) {
 
     if (current_amount - (amount * to_add.price) >= 0) {
-      to_add.amount = amount;
+      to_add.amount += amount;
       this.current_amount -= (amount * to_add.price);
-      to_add.buy_price = to_add.price;
+      if (this.assets.containsKey(to_add.ticker)) {
+        to_add.buy_price = average_buy_price(to_add, to_add.price, amount);
+      }
+      else {
+        to_add.buy_price = to_add.price;
+      }
+
       assets.put(to_add.ticker, to_add);
       return true;
     } else {
       System.out.println("You can not afford " + amount + to_add.ticker + ".");
       return false;
     }
+  }
+
+  public double average_buy_price(Asset asset, double price, int amount){
+    return ((asset.buy_price * asset.amount) + (price * amount)) / (asset.amount + amount);
   }
 
   /**
@@ -52,8 +62,18 @@ public class Portfolio {
         this.current_amount += curr_value;
         this.overall_profit_loss += (curr_value - buy_value);
         this.assets.get(to_sell).amount -= amount;
+
         System.out.println(amount + " shares of " + to_sell + "sold for a profit of "
             + (buy_value-curr_value));
+
+
+        //reset asset and remove it from the portfolio if we sell all of it
+        if(this.assets.get(to_sell).amount == 0){
+          this.assets.get(to_sell).buy_price = 0;
+          this.assets.get(to_sell).profit_loss = 0;
+          this.assets.remove(to_sell);
+        }
+
 
     }
   }
