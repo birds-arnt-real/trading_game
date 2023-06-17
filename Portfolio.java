@@ -24,8 +24,6 @@ public class Portfolio {
   /**
    * This function completes a buy transaction
    *
-   * @param to_add
-   * @param amount
    */
   public boolean buy(Asset to_add, int amount) {
 
@@ -36,18 +34,17 @@ public class Portfolio {
       assets.put(to_add.ticker, to_add);
       return true;
     } else {
-      System.out.println("You can not afford " + String.valueOf(amount) + to_add.ticker + ".");
+      System.out.println("You can not afford " + amount + to_add.ticker + ".");
       return false;
     }
   }
 
   /**
    * This function completes a sale and records the profit
-   *
-   * @param to_sell
+   *  @param to_sell
    * @param amount
    */
-  public boolean sell(String to_sell, int amount) {
+  public void sell(String to_sell, int amount) {
 
     if (this.assets.containsKey(to_sell) && (this.assets.get(to_sell).amount >= amount)) {
         double curr_value = amount * this.assets.get(to_sell).buy_price;
@@ -56,9 +53,7 @@ public class Portfolio {
         this.overall_profit_loss += (curr_value - buy_value);
         this.assets.get(to_sell).amount -= amount;
 
-        return true;
     }
-    return false;
   }
 
   public double profit_loss_overall_per_turn(){
@@ -67,8 +62,7 @@ public class Portfolio {
     for (Map.Entry<String, Asset> entry : this.assets.entrySet()) {
       String key = entry.getKey();
 
-      int price_history_list_end = this.assets.get(key).price_history.size() - 2 > 0 ?
-          this.assets.get(key).price_history.size() - 2 : 0;
+      int price_history_list_end = Math.max(this.assets.get(key).price_history.size() - 2, 0);
 
       pl = (this.assets.get(key).amount * this.assets.get(key).price) -
           (this.assets.get(key).amount  * this.assets.get(key).price_history.get(price_history_list_end));
@@ -174,13 +168,13 @@ public class Portfolio {
     output.add(0,col_labels);
     output.add(1,line_break);
 
-    String display = "";
+    StringBuilder display = new StringBuilder();
 
     for(String asset: output){
-      display += (asset + ("\n"));
+      display.append(asset).append("\n");
     }
 
-    return display;
+    return display.toString();
   }
 
 }

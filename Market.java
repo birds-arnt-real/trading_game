@@ -16,7 +16,7 @@ public class Market {
   protected Random rand_gen;
   protected Hashtable<String,Asset> assets_in_market;
   protected Hashtable<String,List<Asset>> assets_in_market_by_sector;
-  protected Set<String> sectors = new HashSet<String>();
+  protected Set<String> sectors = new HashSet<>();
   protected int number_of_turns;
 
   /**

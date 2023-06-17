@@ -15,7 +15,7 @@ public class Asset {
   protected String sector;
   protected String name;
   protected double price;
-  protected ArrayList<Double> price_history = new ArrayList<Double>();
+  protected ArrayList<Double> price_history = new ArrayList<>();
   protected int trend_direction;
   protected double volatility_factor;
   protected int amount;
@@ -24,12 +24,6 @@ public class Asset {
 
   /**
    * This is the constructor that gets added into the market
-   * @param _ticker
-   * @param _sector
-   * @param _name
-   * @param _price
-   * @param _trend_direction
-   * @param _volatility_factor
    */
   public Asset(String _ticker, String _sector, String _name, double _price, int _trend_direction,
       double _volatility_factor){
@@ -47,14 +41,13 @@ public class Asset {
 
   /**
    * This is only for testing, ill write a better one for actual game play
-   * @return
    */
   @Override public String toString() {
 //    return "Asset{" + "ticker='" + ticker + '\'' + ", sector='" + sector + '\'' + ", name='" + name
 //        + '\'' + ", price=" + price + ", price_history=" + price_history + ", trend_direction="
 //        + trend_direction + ", volatility_factor=" + volatility_factor + "}\n";
 
-    return ticker + " ("+name+"): $" + String.valueOf(price) + "  (" +
+    return ticker + " ("+name+"): $" + price + "  (" +
         Collections.min(price_history) + ", " + Collections.max(price_history)+")";
   }
 

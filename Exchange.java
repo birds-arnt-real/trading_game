@@ -25,25 +25,18 @@ public class Exchange {
       display_main_menu();
       choice = this.keyboard.nextLine().toUpperCase();
 
-      switch(choice){
-
-        case "E":
+      switch (choice) {
+        case "E" -> {
           display_exchange();
           asset_transaction();
-          break;
-        case "A":
+        }
+        case "A" -> {
           this.current_market.next_turn();
           update_portfolio();
-          break;
-        case "S":
-          display_exchange_sell();
-          break;
-        case "P":
-          System.out.println(this.current_portfolio);
-          break;
-        default:
-          System.out.println("default");
-          break;
+        }
+        case "S" -> display_exchange_sell();
+        case "P" -> System.out.println(this.current_portfolio);
+        default -> System.out.println("default");
       }
 
 
