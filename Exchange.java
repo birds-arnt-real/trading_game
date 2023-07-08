@@ -34,6 +34,8 @@ public class Exchange {
         case "A" -> {
           this.current_market.next_turn();
           update_portfolio();
+          System.out.println("DAY : " + this.current_market.number_of_turns+"\n" +
+              this.current_portfolio);
         }
         case "S" -> display_exchange_sell();
         case "P" -> System.out.println(this.current_portfolio);
@@ -67,19 +69,31 @@ public class Exchange {
 
     switch(display_choice){
       // this displays based on sector
-      case "S":
+      case "S" -> {
         List<String> by_sector = get_assets_by_sector();
 
         for (String s : by_sector) {
           System.out.println(s);
         }
-        break;
-      case "P":
+      }
+      //case "P":
 
-        break;
-      case "N":
+      case "N" -> {
+        List<String> total = this.current_market.get_total_market();
+        System.out.println("Enter search [N]ame and [Q]uantity: ");
+        String[] input = this.keyboard.nextLine().split(" ");
+        String ticker = input[0];
+        int amount = input.length < 2 ? 5 : Integer.parseInt(input[1]);
 
-      default:
+        List<String> results = new
+            StringSearch().searchSimilarStrings(total,ticker,amount,1);
+
+        for(int i = 0; i < results.size(); i++){
+          System.out.println(this.current_market.assets_in_market.get(results.get(i)));
+        }
+      }
+
+      default -> {}
 
 
     }

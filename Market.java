@@ -209,4 +209,15 @@ public class Market {
 
     return true;
   }
-}
+
+  /**
+   * Get total list of tickers in string
+   * @return
+   */
+
+  public List<String> get_total_market(){
+    List<String> total = new ArrayList<>(assets_in_market.keySet());
+    return (List<String>) total;
+    }
+  }
+
