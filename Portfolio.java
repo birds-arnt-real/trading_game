@@ -45,6 +45,18 @@ public class Portfolio {
     }
   }
 
+  /**
+   * Returns total value of the portfolio during the current turn
+   * @return total cash value of portfolio
+   */
+  public double get_port_value(){
+    double rslt = 0;
+    for(String asset: this.assets.keySet()){
+      Asset curr_asset = this.assets.get(asset);
+      rslt += curr_asset.price * curr_asset.amount;
+    }
+    return rslt;
+  }
   public double average_buy_price(Asset asset, double price, int amount){
     return ((asset.buy_price * asset.amount) + (price * amount)) / (asset.amount + amount);
   }
@@ -54,27 +66,26 @@ public class Portfolio {
    *  @param to_sell
    * @param amount
    */
+
   public void sell(String to_sell, int amount) {
-
     if (this.assets.containsKey(to_sell) && (this.assets.get(to_sell).amount >= amount)) {
-        double curr_value = amount * this.assets.get(to_sell).buy_price;
-        double buy_value = amount * this.assets.get(to_sell).price;
-        this.current_amount += curr_value;
-        this.overall_profit_loss += (curr_value - buy_value);
-        this.assets.get(to_sell).amount -= amount;
+      Asset asset = this.assets.get(to_sell);
+      double buyValue = amount * asset.buy_price;
+      double sellValue = amount * asset.price;
+      double profitLoss = sellValue - buyValue;
 
-        System.out.println(amount + " shares of " + to_sell + "sold for a profit of "
-            + (buy_value-curr_value));
+      this.current_amount += sellValue; // Add the sell value to the current amount
+      this.overall_profit_loss += profitLoss; // Update overall profit/loss
 
+      asset.amount -= amount;
 
-        //reset asset and remove it from the portfolio if we sell all of it
-        if(this.assets.get(to_sell).amount == 0){
-          this.assets.get(to_sell).buy_price = 0;
-          this.assets.get(to_sell).profit_loss = 0;
-          this.assets.remove(to_sell);
-        }
+      DecimalFormat decimalFormat = new DecimalFormat("#.00");
+      System.out.println(amount + " shares of " + to_sell + " sold for a profit of " + decimalFormat.format(profitLoss));
 
-
+      // Reset asset and remove it from the portfolio if we sell all of it
+      if (asset.amount == 0) {
+        this.assets.remove(to_sell);
+      }
     }
   }
 

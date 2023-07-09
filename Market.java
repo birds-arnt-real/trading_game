@@ -162,14 +162,9 @@ public class Market {
     // first we need to update all of the assets
     try {
       this.assets_in_market.forEach((key, value) -> {
-        // the initial price is already added into the price history
-//        if(value.price_history.size() == 0) {
-//          value.price_history.add(value.price);
-//        }
         price_change(this.assets_in_market.get(key));
 
       });
-
       this.number_of_turns++;
 
       return true;
@@ -189,21 +184,29 @@ public class Market {
    * @param asset_to_update
    * @return
    */
-  public boolean price_change(Asset asset_to_update){
-
+  public boolean price_change(Asset asset_to_update) {
     double curr_price = asset_to_update.price;
-    boolean wild_card = this.rand_gen.nextInt(100) % 11 == 0;
-    double amount_to_increase = asset_to_update.price * asset_to_update.volatility_factor;
+    double volatility_factor = rand_gen.nextDouble(0, 0.5); // Adjust the volatility range as desired
 
-    if(wild_card){
-      amount_to_increase += (curr_price * ((this.rand_gen.nextDouble(1))*
-          asset_to_update.volatility_factor));
+    int trend_direction = rand_gen.nextInt(-1, 3); // Adjust the trend direction probabilities
+
+    double amount_to_increase = curr_price * volatility_factor;
+
+    boolean wild_card = rand_gen.nextInt(10) == 0; // 1 in 10 chance for a wild card event
+
+    if (wild_card) {
+      double wild_card_increase = curr_price * rand_gen.nextDouble(0.8, 1.2); // Randomized
+      // multiplier for wild card events
+      amount_to_increase += wild_card_increase;
     }
 
-    asset_to_update.trend_direction = rand_gen.nextInt(0, 3) - 1;
-    asset_to_update.volatility_factor = rand_gen.nextDouble(0, .2);
-    double new_price =
-        asset_to_update.price += (amount_to_increase * asset_to_update.trend_direction);
+    double price_change = amount_to_increase * trend_direction;
+    double new_price = curr_price + price_change;
+
+    if (new_price <= 0) {
+      new_price = 0.01; // Set a minimum positive price value, such as 0.01
+    }
+
     asset_to_update.price = new_price;
     asset_to_update.price_history.add(new_price);
 

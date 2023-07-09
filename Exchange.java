@@ -125,6 +125,8 @@ public class Exchange {
         decimalFormat.format(this.current_portfolio.most_recent_profit_loss_change));
     System.out.println("Current Overall Profit/Loss: " +
         decimalFormat.format(this.current_portfolio.overall_profit_loss));
+    System.out.println("Current Portfolio Worth: " + decimalFormat.format(
+        this.current_portfolio.get_port_value()));
     System.out.println("You have $" + decimalFormat.format(this.current_portfolio.current_amount) +
         " available on your " + this.current_market.number_of_turns + " day.\n");
   }
@@ -180,9 +182,7 @@ public class Exchange {
         this.current_portfolio.profit_loss_individual_asset_per_turn(this.current_market.assets_in_market.get(key));
     });
 
-
     this.current_portfolio.most_recent_profit_loss_change = this.current_portfolio.profit_loss_overall_per_turn();
-    this.current_portfolio.overall_profit_loss += this.current_portfolio.most_recent_profit_loss_change;
   }
 
 
